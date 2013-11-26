@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Greet Page</title>
+	<style>
+	*{
+		margin: 0px;
+	}
+	h1{
+		border-top: 2px solid blue;
+		border-bottom: 2px solid blue;
+		background-color: lightblue;
+		padding: 10px;
+	}
+	.content{
+		margin-left: 5px;
+		margin-top: 10px;	
+	}
+
+	</style>
+<script>
+		function greet(){
+		  var txtName = document.getElementById("txtName");
+		  var divMessage = document.getElementById("divMessage");
+		  var currentHour = new Date().getHours();
+		  var greetingMsg = "", greetingColor = "";
+		  if (currentHour < 12){
+		  	greetingMsg = "Hi " + txtName.value + " , Good Morning";
+		  	greetingColor = "blue";
+		  } else {
+		  	greetingMsg = "Hi " + txtName.value + " , Good Evening";
+		  	greetingColor = "red";
+		  }
+		  divMessage.innerText = greetingMsg;
+		  divMessage.style.color = greetingColor;
+		}
+		function initialize(){
+			var btnGreet = document.getElementById("btnGreet");
+			btnGreet.onclick = greet;
+		}
+		window.onload = initialize;
+	</script>
+</head>
+<body>
+	<h1>Greet</h1>
+	<div class="content">
+		
+		<span>Name :</span>	
+		<input type="text" 	name="" id="txtName">
+		<input type="button" value="Greet" id="btnGreet">
+		<div id="divMessage">[This is where the greeting will be displayed]</div>	
+		<ul>
+			<li>List Item - 1</li>
+			<li>List Item - 2</li>
+			<li>List Item - 3</li>
+			<li>List Item - 4</li>
+		</ul>
+	</div>
+	
+</body>
+</html>

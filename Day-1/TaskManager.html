@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Task Manager</title>
+	<script>
+	function addTask(){
+		var taskName = document.getElementById("txtTask").value;
+		var ulTaskList = document.getElementById("ulTaskList");
+		var newTaskItem = document.createElement("li");
+		newTaskItem.innerText = taskName;
+		newTaskItem.onclick = onTaskItemClick;
+		//ulTaskList.innerHTML = ulTaskList.innerHTML + newTaskItem;
+		ulTaskList.appendChild(newTaskItem);
+		displayMessage("A new task is added");
+	}
+	function initialize(){
+		document.getElementById("btnAddTask").onclick = addTask;
+		document.getElementById("btnRemoveCompleted").onclick = removeCompletedTasks;
+		attachTaskEvents();
+	}
+	function attachTaskEvents(){
+		var ulTaskList = document.getElementById("ulTaskList");
+		for(var i=0;i<ulTaskList.children.length;i++){
+			ulTaskList.children[i].onclick = onTaskItemClick;
+		}
+	}
+	function onTaskItemClick(){
+		if (this.classList.contains("completed")){
+			this.classList.remove("completed");
+		} else {
+			this.classList.add("completed");
+		}
+	}
+	function removeCompletedTasks(){
+		var ulTaskList = document.getElementById("ulTaskList");
+		for(var i=ulTaskList.children.length-1;i>=0;i--)
+			if (ulTaskList.children[i].classList.contains("completed"))
+				ulTaskList.children[i].remove();
+		displayMessage("Zero or more completed tasks are removed");
+	}
+	var currentOpacity = 1;
+	function displayMessage(msg){
+		document.getElementById("divMessage").style.opacity = 1;
+		document.getElementById("divMessage").innerText = msg;
+		currentOpacity = 1;
+		setTimeout(function(){
+			deprecateOpacity();
+		},3000);
+	}
+	function deprecateOpacity(){
+		currentOpacity -= 0.05;
+		document.getElementById("divMessage").style.opacity = currentOpacity;
+		if (currentOpacity > 0){
+			setTimeout(deprecateOpacity,50);
+		} else {
+			document.getElementById("divMessage").style.opacity = 0;
+		}
+		console.log(currentOpacity, " is currentOpacity");
+	}
+	
+	window.onload = initialize;
+	</script>
+	<style>
+	.completed {
+		color : red;
+		font-style: italic;
+		text-decoration: line-through;
+	}
+	li{
+		cursor : pointer;
+	}
+
+	</style>
+</head>
+<body>
+	<h1>Task Manager</h1>
+	<span>Task :</span>
+	<input type="text" name="" id="txtTask">
+	<input type="button" value="Add Task" id="btnAddTask">
+	<input type="button" value="Remove Completed" id="btnRemoveCompleted">
+	<ul id="ulTaskList">
+		<li class="dummyClass1 dummyClass2">Task-1</li>
+		<li>Task-2</li>
+		<li>Task-3</li>
+	</ul>
+	<div id="divMessage"></div>
+	
+</body>
+</html>
