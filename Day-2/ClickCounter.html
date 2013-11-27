@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Click Counter</title>
+	<script>
+	(function(){
+		var count = 0;
+		function initialize(){
+			document.getElementById("btnCount").onclick = onBtnCountClick;
+		}
+		function onBtnCountClick(){
+			count++;
+			document.getElementById("divMessage").innerText = count;
+		}
+		window.onload = initialize;
+	}());
+	</script>
+</head>
+<body>
+	<input type="button" value="Count" id="btnCount">
+	<div id="divMessage"></div>
+</body>
+</html>
