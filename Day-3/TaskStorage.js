@@ -1,5 +1,5 @@
 function TaskStorage(){
-	this.storage = window.localStorage;
+	this.storage = window.sessionStorage;
 }
 TaskStorage.prototype.addTask = function(taskName){
 	var newId = new Date().getTime().toString();
