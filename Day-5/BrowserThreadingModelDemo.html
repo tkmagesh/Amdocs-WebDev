@@ -11,12 +11,13 @@
 			}
 			function onBtnDoWorkClick(){
 				displayMessage("Work Started");
-				setTimeout(function(){
-					doWork();
-						
-				});
+				doWork(
+					displayProgress, function(){
+						displayMessage("Work Completed");
+					}
+				);
 			}
-			function doWork(){
+			function doWork(progressCallback,onCompletionCallback){
 				var iterationLimit = 100000/100,
 					currentIteration =0;
 
@@ -26,12 +27,15 @@
 							for(var k=0;k<100;k++)
 							{}	
 					currentIteration++;
+
 					if (currentIteration < iterationLimit){
-						setTimeout(oneIteration,1);
-						displayProgress(currentIteration/10);
+						setTimeout(oneIteration);
+						if (typeof progressCallback === "function")
+							progressCallback(currentIteration/10);
 					} else {
-						displayProgress(100);
-						displayMessage("Work Completed");
+						progressCallback(100);
+						if (typeof onCompletionCallback === "function")
+							onCompletionCallback();
 					}
 				}
 				oneIteration();
