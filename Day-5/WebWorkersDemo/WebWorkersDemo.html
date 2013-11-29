@@ -6,19 +6,26 @@
 	<script>
 	(function(){
 		window.onload = initialize;
+		var worker = new Worker("ComplexWork.js");
 		function initialize(){
 			document.getElementById("btnDoWork").onclick = onBtnDoWorkClick;
 		}
 		function onBtnDoWorkClick(){
-			var worker = new Worker("ComplexWork.js");
+			
 			worker.onmessage = function(msgEvt){
-				if (msgEvt.data === "completed"){
+				var response = msgEvt.data;
+				if (response.type === "completed"){
 					displayMessage("Work Completed");
+				} else if (response.type === "progress"){
+					displayProgress(response.percentCompleted);
 				}
 			}
 
 			worker.postMessage("start");
 			displayMessage("Work Started");
+		}
+		function displayProgress(percentCompleted){
+			document.getElementById("progress").value = percentCompleted;
 		}
 		function displayMessage(msg){
 			document.getElementById("divMessages").innerHTML += "<br/>" + msg;
