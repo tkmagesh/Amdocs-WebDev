@@ -1,0 +1,8 @@
+[
+	{"id":101,"title":"C#","cost":22,"units":21},
+	{"id":102,"title":"F#","cost":52,"units":81},
+	{"id":103,"title":"D#","cost":82,"units":13},
+	{"id":104,"title":"E#","cost":24,"units":17},
+	{"id":105,"title":"G#","cost":20,"units":19},
+	{"id":106,"title":"H#","cost":12,"units":10}
+]

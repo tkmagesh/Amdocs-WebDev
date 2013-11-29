@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Ajax Demo</title>
+	<script src="jquery-1.10.2.js"></script>
+	<script>
+	$(function(){
+		$("#btnLoad").click(function(){
+			/*$.get("products.json",function(data){
+				createProductsList(data);
+			},"json")*/
+			$.ajax({
+				url : 'products.json',
+				type : 'get',
+				dataType : 'json',
+				contentType : "application/json",
+				success : function(data){
+					createProductsList(data);
+				}
+			});
+		});
+
+		function createProductsList(data){
+			var $productList = $("<ul>");
+			$.each(data,function(){
+				$productList.append("<li>" + this.title + "</li>");
+			});
+			$("#divContent").append($productList);
+		}
+	});
+
+	</script>
+</head>
+<body>
+	<input type="button" value="Load Products" id="btnLoad">
+	<div id="divContent"></div>
+</body>
+</html>
