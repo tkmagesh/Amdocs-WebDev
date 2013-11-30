@@ -3,6 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Salary Calculator</title>
+	<script src="jquery-1.10.2.js"></script>
 	<style>
 	#spanSalary{
 		font-size: 28px;
@@ -17,39 +18,130 @@
 	}
 	</style>
 	<script>
-	(function(){
-		window.onload = initialize;
-		function initialize(){
-			document.getElementById("btnCalculate").onclick = onBtnCalculateClick;
-			document.getElementById("rangeTax").onchange = onRangeTaxChange;
-			onRangeTaxChange.call(document.getElementById("rangeTax"));
+	function calculateSalary(basic,hra,da,tax){
+		var gross = basic + hra + da;
+		var taxToBeDeducted = gross * (tax/100);
+		var net = gross - taxToBeDeducted;
+		return net;
+	}
 
-		}
-		function onBtnCalculateClick(){
-			var basic = parseFloat(document.getElementById("txtBasic").value);
-			var hra = parseFloat(document.getElementById("txtHra").value);
-			var da = parseFloat(document.getElementById("txtDa").value);
-			var tax = parseFloat(document.getElementById("rangeTax").value);
-			var gross = basic + hra + da;
-			var taxToBeDeducted = gross * (tax/100);
-			var net = gross - taxToBeDeducted;
-			document.getElementById("spanSalary").innerText = net;
-		}
-		function onRangeTaxChange(){
-			document.getElementById("spanTax").innerText = this.value;
-		}
-	})();
+	function SalaryModel(){
+		var _basic = 0, _hra = 0, _da = 0;_tax = 0, _salary = 0, _changeSubscribers = {};
+		this.addSubscriber = function(attrName,onChangeFn){
+			if (!_changeSubscribers[attrName]) _changeSubscribers[attrName] = [];
+			_changeSubscribers[attrName].push(onChangeFn);
+		};
 
+		this.basic = function(){
+			if (arguments.length === 0) return _basic;
+			_basic = arguments[0];
+			notifySubscribers('basic');
+		};
+		this.hra = function(){
+			if (arguments.length === 0) return _hra;
+			_hra = arguments[0];
+			notifySubscribers('hra');	
+
+		};
+		this.da = function(){
+			if (arguments.length === 0) return _da;
+			_da = arguments[0];
+			notifySubscribers('da');
+		};
+		this.tax = function(){
+			if (arguments.length === 0) return _tax;
+			_tax = arguments[0];
+			notifySubscribers('tax');
+		};
+		this.salary = function(){
+			return _salary;
+		};
+		this.calculate = function(){
+			_salary = calculateSalary(this.basic(), this.hra() , this.da(), this.tax());
+			notifySubscribers('salary');
+		}
+		function notifySubscribers(attrName){
+			if (_changeSubscribers[attrName])
+				for(var i=0;i<_changeSubscribers[attrName].length;i++)
+					_changeSubscribers[attrName][i]();
+		}
+	}
+	var calculator = new SalaryModel();
+
+	function CalculatorView(model){
+		var _model = model;
+		var _$root = null;
+
+		this.initialize = function (){
+			_$root = $($("#calculatorTemplate").html());
+			_$root.find("#txtBasic").bind('change', function(){
+				var basic = parseFloat(_$root.find("#txtBasic").val());
+				calculator.basic(basic);
+			});
+
+			_$root.find("#txtHra").bind('change', function(){
+				var hra = parseFloat(_$root.find("#txtHra").val());
+				calculator.hra(hra);
+			});
+
+			_$root.find("#txtDa").bind('change', function(){
+				var da = parseFloat(_$root.find("#txtDa").val());
+				calculator.da(da);
+			});
+
+			_$root.find("#rangeTax").bind('change', function(){
+				var tax = parseFloat(_$root.find("#rangeTax").val());
+				calculator.tax(tax);
+			});
+
+			_$root.find("#btnCalculate").bind('click', function(){
+				calculator.calculate();
+			});
+			
+
+			calculator.addSubscriber('basic',function(){
+				_$root.find("#txtBasic").val(calculator.basic());
+			});
+
+			calculator.addSubscriber('hra',function(){
+				_$root.find("#txtHra").val(calculator.hra());
+			});
+			calculator.addSubscriber('da',function(){
+				_$root.find("#txtDa").val(calculator.da());
+			});
+			calculator.addSubscriber('tax',function(){
+				_$root.find("#rangeTax").val(calculator.tax());
+				_$root.find("#spanTax").text(calculator.tax());
+			});
+
+			calculator.addSubscriber('salary',function(){
+				_$root.find("#spanSalary").text(calculator.salary());
+
+			});
+			this.$root = _$root;
+		}
+
+	}
+
+	$(function(){
+		window.calculatorView = new CalculatorView(calculator);
+		calculatorView.initialize();
+		$(".content").append(calculatorView.$root);
+	});
+
+	</script>
+	<script type="text/template" id="calculatorTemplate">
+		<div><label>Basic :</label><input type="text" name="" id="txtBasic"></div>
+		<div><label>Hra :</label><input type="text" name="" id="txtHra"></div>
+		<div><label>Da :</label><input type="text" name="" id="txtDa"></div>
+		<div><label>Tax :</label><input type="range" min="0" max="50" id="rangeTax" value="10"><span id="spanTax">[Tax]</span></div>
+		<div><span id="spanSalary">[Salary]</span></div>
+		<div><input type="button" value="Calculate" id="btnCalculate"></div>
 	</script>
 </head>
 <body>
 <div class="content">
-	<div><label>Basic :</label><input type="text" name="" id="txtBasic"></div>
-	<div><label>Hra :</label><input type="text" name="" id="txtHra"></div>
-	<div><label>Da :</label><input type="text" name="" id="txtDa"></div>
-	<div><label>Tax :</label><input type="range" min="0" max="50" id="rangeTax" value="10"><span id="spanTax">[Tax]</span></div>
-	<div><span id="spanSalary">[Salary]</span></div>
-	<div><input type="button" value="Calculate" id="btnCalculate"></div>
+	
 </div>
 	
 </body>
