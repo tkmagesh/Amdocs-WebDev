@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Salary Calculator</title>
+	<style>
+	#spanSalary{
+		font-size: 28px;
+		color :red;
+
+		width: 0 auto;
+	}
+	div > label{
+		display : block;
+		float : left;
+		width : 70px;
+	}
+	</style>
+</head>
+<body>
+<div class="content">
+	<div><label>Basic :</label><input type="text" name="" id="txtBasic"></div>
+	<div><label>Hra :</label><input type="text" name="" id="txtHra"></div>
+	<div><label>Da :</label><input type="text" name="" id="txtDa"></div>
+	<div><label>Tax :</label><input type="range" min="0" max="50" id="rangeTax"><span id="spanTax">[Tax]</span></div>
+	<div><span id="spanSalary">[Salary]</span></div>
+	<div><input type="button" value="Calculate" id="btnCalculate"></div>
+</div>
+	
+</body>
+</html>
