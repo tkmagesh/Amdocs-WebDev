@@ -16,13 +16,38 @@
 		width : 70px;
 	}
 	</style>
+	<script>
+	(function(){
+		window.onload = initialize;
+		function initialize(){
+			document.getElementById("btnCalculate").onclick = onBtnCalculateClick;
+			document.getElementById("rangeTax").onchange = onRangeTaxChange;
+			onRangeTaxChange.call(document.getElementById("rangeTax"));
+
+		}
+		function onBtnCalculateClick(){
+			var basic = parseFloat(document.getElementById("txtBasic").value);
+			var hra = parseFloat(document.getElementById("txtHra").value);
+			var da = parseFloat(document.getElementById("txtDa").value);
+			var tax = parseFloat(document.getElementById("rangeTax").value);
+			var gross = basic + hra + da;
+			var taxToBeDeducted = gross * (tax/100);
+			var net = gross - taxToBeDeducted;
+			document.getElementById("spanSalary").innerText = net;
+		}
+		function onRangeTaxChange(){
+			document.getElementById("spanTax").innerText = this.value;
+		}
+	})();
+
+	</script>
 </head>
 <body>
 <div class="content">
 	<div><label>Basic :</label><input type="text" name="" id="txtBasic"></div>
 	<div><label>Hra :</label><input type="text" name="" id="txtHra"></div>
 	<div><label>Da :</label><input type="text" name="" id="txtDa"></div>
-	<div><label>Tax :</label><input type="range" min="0" max="50" id="rangeTax"><span id="spanTax">[Tax]</span></div>
+	<div><label>Tax :</label><input type="range" min="0" max="50" id="rangeTax" value="10"><span id="spanTax">[Tax]</span></div>
 	<div><span id="spanSalary">[Salary]</span></div>
 	<div><input type="button" value="Calculate" id="btnCalculate"></div>
 </div>
